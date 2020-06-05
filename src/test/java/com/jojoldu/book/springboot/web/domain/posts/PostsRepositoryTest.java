@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -37,5 +38,23 @@ public class PostsRepositoryTest {
         Posts posts = postsList.get(0);
         assertThat(posts.getTitle()).isEqualTo(title);
         assertThat(posts.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void BaseTimeEntityRegister() {
+        LocalDateTime now = LocalDateTime.of(2020,6,6,0,0,0);
+
+        Posts posts = new Posts("title", "content", "author");
+        postsRepository.save(posts);
+
+        List<Posts> postsList = postsRepository.findAll();
+
+        Posts posts1 = postsList.get(0);
+
+        System.out.println(">>>>> createdDate = " + posts1.getCreatedDate()+
+                ", modifiedDate = " + posts.getModifiedDate());
+
+        assertThat(posts1.getCreatedDate()).isAfter(now);
+        assertThat(posts1.getModifiedDate()).isAfter(now);
     }
 }
